@@ -18,6 +18,8 @@ Pacman agents (in searchAgents.py).
 """
 
 import util
+from game import Directions
+
 
 class SearchProblem:
     """
@@ -73,26 +75,52 @@ def tinyMazeSearch(problem):
     return  [s, s, w, s, w, w, s, w]
 
 def depthFirstSearch(problem):
-    """
-    Search the deepest nodes in the search tree first.
-
-    Your search algorithm needs to return a list of actions that reaches the
-    goal. Make sure to implement a graph search algorithm.
-
-    To get started, you might want to try some of these simple commands to
-    understand the search problem that is being passed in:
-
-    print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
-    """
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # Initialize stack used for DFS
+    _Stack = util.Stack()
+    # Initialize set used to track what nodes we have already visited
+    _Visited = set()
+    # Get starting state and push it onto stack
+    startingState = problem.getStartState()
+    _Stack.push((startingState, []))
+    # Set of directions to convert from string to game.Direction type
+    _setDirections = {'North': Directions.NORTH, 'South': Directions.SOUTH,
+                      'East': Directions.EAST, 'West': Directions.WEST}
+    while not _Stack.isEmpty():
+        # Pop top item, see if not visited
+        top = _Stack.pop()
+        space = top[0]
+        dir = top[1]
+        if problem.isGoalState(space):
+            return dir
+        if space not in _Visited:
+            _Visited.add(space)
+            for it in problem.getSuccessors(space):
+                if it[0] not in _Visited:
+                    _Stack.push((it[0], dir + [_setDirections[it[1]]]))
 
 def breadthFirstSearch(problem):
-    """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # Initialize stack used for BFS
+    _Queue = util.Queue()
+    # Initialize set used to track what nodes we have already visited
+    _Visited = set()
+    # Get starting state and push it onto stack
+    startingState = problem.getStartState()
+    _Queue.push((startingState, []))
+    # Set of directions to convert from string to game.Direction type
+    _setDirections = {'North': Directions.NORTH, 'South': Directions.SOUTH,
+                      'East': Directions.EAST, 'West': Directions.WEST}
+    while not _Queue.isEmpty():
+        # Pop top item, see if not visited
+        top = _Queue.pop()
+        space = top[0]
+        dir = top[1]
+        if problem.isGoalState(space):
+            return dir
+        if space not in _Visited:
+            _Visited.add(space)
+            for it in problem.getSuccessors(space):
+                if it[0] not in _Visited:
+                    _Queue.push((it[0], dir + [_setDirections[it[1]]]))
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
