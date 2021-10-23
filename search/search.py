@@ -81,6 +81,9 @@ def depthFirstSearch(problem):
     _Visited = set()
     # Get starting state and push it onto stack
     startingState = problem.getStartState()
+    if problem.isGoalState(startingState):
+        return set()
+
     _Stack.push((startingState, []))
     # Set of directions to convert from string to game.Direction type
     _setDirections = {'North': Directions.NORTH, 'South': Directions.SOUTH,
@@ -105,6 +108,9 @@ def breadthFirstSearch(problem):
     _Visited = set()
     # Get starting state and push it onto stack
     startingState = problem.getStartState()
+    if problem.isGoalState(startingState):
+        return set()
+
     _Queue.push((startingState, []))
     # Set of directions to convert from string to game.Direction type
     _setDirections = {'North': Directions.NORTH, 'South': Directions.SOUTH,
@@ -125,7 +131,33 @@ def breadthFirstSearch(problem):
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # initialize priority queue for UCS and set for visited nodes
+    _PriorityQueue = util.PriorityQueue()
+    _Visited = set()
+    startingState = problem.getStartState()
+
+    # check if starting state is goal state
+    if problem.isGoalState(startingState):
+        return set()
+
+    _PriorityQueue.push((startingState, [], 0), 0)
+    # Set of directions to convert from string to game.Direction type
+    _setDirections = {'North': Directions.NORTH, 'South': Directions.SOUTH,
+                      'East': Directions.EAST, 'West': Directions.WEST}
+
+    while not _PriorityQueue.isEmpty():
+        # Pop top item, see if not visited
+        top = _PriorityQueue.pop()
+        space = top[0]
+        dir = top[1]
+        cost = top[2]
+        if problem.isGoalState(space):
+            return dir
+        if space not in _Visited:
+            _Visited.add(space)
+            for it in problem.getSuccessors(space):
+                if it[0] not in _Visited:
+                    _PriorityQueue.push((it[0], dir + [_setDirections[it[1]]], cost+it[2]), it[2])
 
 def nullHeuristic(state, problem=None):
     """
