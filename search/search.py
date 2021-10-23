@@ -169,7 +169,34 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # initialize priority queue for UCS and set for visited nodes
+    _PriorityQueue = util.PriorityQueue()
+    _Visited = set()
+    startingState = problem.getStartState()
+
+    # check if starting state is goal state
+    if problem.isGoalState(startingState):
+        return set()
+
+    _PriorityQueue.push((startingState, [], 0), 0)
+    # Set of directions to convert from string to game.Direction type
+    _setDirections = {'North': Directions.NORTH, 'South': Directions.SOUTH,
+                      'East': Directions.EAST, 'West': Directions.WEST}
+
+    while not _PriorityQueue.isEmpty():
+        # Pop top item, see if not visited
+        top = _PriorityQueue.pop()
+        space = top[0]
+        dir = top[1]
+        cost = top[2]
+        if problem.isGoalState(space):
+            return dir
+        if space not in _Visited:
+            _Visited.add(space)
+            for it in problem.getSuccessors(space):
+                if it[0] not in _Visited:
+                    h_cost = cost + it[2] + heuristic(it[0], problem)
+                    _PriorityQueue.push((it[0], dir + [_setDirections[it[1]]], cost + it[2]), h_cost)
 
 
 # Abbreviations
