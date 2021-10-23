@@ -78,11 +78,11 @@ def depthFirstSearch(problem):
     # Initialize stack used for DFS
     _Stack = util.Stack()
     # Initialize set used to track what nodes we have already visited
-    _Visited = set()
+    _Visited = []
     # Get starting state and push it onto stack
     startingState = problem.getStartState()
     if problem.isGoalState(startingState):
-        return set()
+        return []
 
     _Stack.push((startingState, []))
     # Set of directions to convert from string to game.Direction type
@@ -96,7 +96,7 @@ def depthFirstSearch(problem):
         if problem.isGoalState(space):
             return dir
         if space not in _Visited:
-            _Visited.add(space)
+            _Visited.append(space)
             for it in problem.getSuccessors(space):
                 if it[0] not in _Visited:
                     _Stack.push((it[0], dir + [_setDirections[it[1]]]))
@@ -105,11 +105,11 @@ def breadthFirstSearch(problem):
     # Initialize stack used for BFS
     _Queue = util.Queue()
     # Initialize set used to track what nodes we have already visited
-    _Visited = set()
+    _Visited = []
     # Get starting state and push it onto stack
     startingState = problem.getStartState()
     if problem.isGoalState(startingState):
-        return set()
+        return []
 
     _Queue.push((startingState, []))
     # Set of directions to convert from string to game.Direction type
@@ -123,7 +123,7 @@ def breadthFirstSearch(problem):
         if problem.isGoalState(space):
             return dir
         if space not in _Visited:
-            _Visited.add(space)
+            _Visited.append(space)
             for it in problem.getSuccessors(space):
                 if it[0] not in _Visited:
                     _Queue.push((it[0], dir + [_setDirections[it[1]]]))
@@ -133,12 +133,12 @@ def uniformCostSearch(problem):
     "*** YOUR CODE HERE ***"
     # initialize priority queue for UCS and set for visited nodes
     _PriorityQueue = util.PriorityQueue()
-    _Visited = set()
+    _Visited = []
     startingState = problem.getStartState()
 
     # check if starting state is goal state
     if problem.isGoalState(startingState):
-        return set()
+        return []
 
     _PriorityQueue.push((startingState, [], 0), 0)
     # Set of directions to convert from string to game.Direction type
@@ -154,7 +154,7 @@ def uniformCostSearch(problem):
         if problem.isGoalState(space):
             return dir
         if space not in _Visited:
-            _Visited.add(space)
+            _Visited.append(space)
             for it in problem.getSuccessors(space):
                 if it[0] not in _Visited:
                     _PriorityQueue.push((it[0], dir + [_setDirections[it[1]]], cost+it[2]), it[2])
@@ -171,12 +171,12 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     "*** YOUR CODE HERE ***"
     # initialize priority queue for UCS and set for visited nodes
     _PriorityQueue = util.PriorityQueue()
-    _Visited = set()
+    _Visited = []
     startingState = problem.getStartState()
 
     # check if starting state is goal state
     if problem.isGoalState(startingState):
-        return set()
+        return []
 
     _PriorityQueue.push((startingState, [], 0), 0)
     # Set of directions to convert from string to game.Direction type
@@ -192,7 +192,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         if problem.isGoalState(space):
             return dir
         if space not in _Visited:
-            _Visited.add(space)
+            _Visited.append(space)
             for it in problem.getSuccessors(space):
                 if it[0] not in _Visited:
                     h_cost = cost + it[2] + heuristic(it[0], problem)
