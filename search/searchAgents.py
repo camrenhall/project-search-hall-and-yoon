@@ -295,8 +295,8 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        state = (self.startingPosition, [])
-        return state
+        # state = (self.startingPosition, [])
+        return self.startingPosition
 
     def isGoalState(self, state):
         """
@@ -323,10 +323,6 @@ class CornersProblem(search.SearchProblem):
             state, 'action' is the action required to get there, and 'stepCost'
             is the incremental cost of expanding to that successor
         """
-        successors = []
-        pos = state[0]
-        visited = state[1]
-
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
             # Here's a code snippet for figuring out whether a new position hits a wall:
@@ -335,7 +331,7 @@ class CornersProblem(search.SearchProblem):
             #   nextx, nexty = int(x + dx), int(y + dy)
             #   hitsWall = self.walls[nextx][nexty]
             "*** YOUR CODE HERE ***"
-            x, y = pos
+            x,y = currentPosition
             dx, dy = Actions.directionToVector(action)
             nextx, nexty = int(x + dx), int(y + dy)
             hitsWall = self.walls[nextx][nexty]
@@ -460,37 +456,41 @@ class AStarFoodSearchAgent(SearchAgent):
         self.searchFunction = lambda prob: search.aStarSearch(prob, foodHeuristic)
         self.searchType = FoodSearchProblem
 
+#helper function
+def findClosestPoint(location, goalArray):
+    closestPoint = 0
+    closestPointCost = util.manhattanDistance(location, goalArray[0])
+    for it in range(len(goalArray)):
+        cornerLocation = goalArray[it]
+        lengthToCorner = util.manhattanDistance(location, cornerLocation)
+        if lengthToCorner < closestPointCost:
+            closestPoint = it
+            closestPointCost = lengthToCorner
+    return (closestPoint, closestPointCost)
+
+#helper function
+def findFarthestPoint(location, goalArray):
+    farthestPoint = 0
+    farthestPointCost = util.manhattanDistance(location, goalArray[0])
+    for it in range(len(goalArray)):
+        cornerLocation = goalArray[it]
+        lengthToCorner = util.manhattanDistance(location, cornerLocation)
+        if lengthToCorner > farthestPointCost:
+            farthestPoint = it
+            farthestPointCost = lengthToCorner
+    return (farthestPoint, farthestPointCost)
+
 def foodHeuristic(state, problem):
-    """
-    Your heuristic for the FoodSearchProblem goes here.
-
-    This heuristic must be consistent to ensure correctness.  First, try to come
-    up with an admissible heuristic; almost all admissible heuristics will be
-    consistent as well.
-
-    If using A* ever finds a solution that is worse uniform cost search finds,
-    your heuristic is *not* consistent, and probably not admissible!  On the
-    other hand, inadmissible or inconsistent heuristics may find optimal
-    solutions, so be careful.
-
-    The state is a tuple ( pacmanPosition, foodGrid ) where foodGrid is a Grid
-    (see game.py) of either True or False. You can call foodGrid.asList() to get
-    a list of food coordinates instead.
-
-    If you want access to info like walls, capsules, etc., you can query the
-    problem.  For example, problem.walls gives you a Grid of where the walls
-    are.
-
-    If you want to *store* information to be reused in other calls to the
-    heuristic, there is a dictionary called problem.heuristicInfo that you can
-    use. For example, if you only want to count the walls once and store that
-    value, try: problem.heuristicInfo['wallCount'] = problem.walls.count()
-    Subsequent calls to this heuristic can access
-    problem.heuristicInfo['wallCount']
-    """
-    position, foodGrid = state
-    "*** YOUR CODE HERE ***"
-    return 0
+    position, food_locations = state
+    _Food = food_locations.asList()
+    heuristic = 0
+    if len(_Food) > 0:
+        closestPoint = findClosestPoint(position, _Food)
+        farthestPoint = findFarthestPoint(position, _Food)
+        currentToClosest = mazeDistance(position, _Food[closestPoint[0]], problem.startingGameState)
+        closestToFarthest = mazeDistance(_Food[closestPoint[0]], _Food[farthestPoint[0]], problem.startingGameState)
+        heuristic = currentToClosest + closestToFarthest
+    return heuristic
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
