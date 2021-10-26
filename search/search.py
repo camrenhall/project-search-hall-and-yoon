@@ -86,8 +86,8 @@ def depthFirstSearch(problem):
 
     _Stack.push((startingState, []))
     # Set of directions to convert from string to game.Direction type
-    _setDirections = {'North': Directions.NORTH, 'South': Directions.SOUTH,
-                      'East': Directions.EAST, 'West': Directions.WEST}
+    #_setDirections = {'North': Directions.NORTH, 'South': Directions.SOUTH,
+    #                  'East': Directions.EAST, 'West': Directions.WEST}
     while not _Stack.isEmpty():
         # Pop top item, see if not visited
         top = _Stack.pop()
@@ -99,7 +99,8 @@ def depthFirstSearch(problem):
             _Visited.append(space)
             for it in problem.getSuccessors(space):
                 if it[0] not in _Visited:
-                    _Stack.push((it[0], dir + [_setDirections[it[1]]]))
+                    #_Stack.push((it[0], dir + [_setDirections[it[1]]]))
+                    _Stack.push((it[0], dir + [it[1]]))
 
 def breadthFirstSearch(problem):
     # Initialize stack used for BFS
@@ -113,8 +114,8 @@ def breadthFirstSearch(problem):
 
     _Queue.push((startingState, []))
     # Set of directions to convert from string to game.Direction type
-    _setDirections = {'North': Directions.NORTH, 'South': Directions.SOUTH,
-                      'East': Directions.EAST, 'West': Directions.WEST}
+    #_setDirections = {'North': Directions.NORTH, 'South': Directions.SOUTH,
+    #                  'East': Directions.EAST, 'West': Directions.WEST}
     while not _Queue.isEmpty():
         # Pop top item, see if not visited
         top = _Queue.pop()
@@ -126,7 +127,8 @@ def breadthFirstSearch(problem):
             _Visited.append(space)
             for it in problem.getSuccessors(space):
                 if it[0] not in _Visited:
-                    _Queue.push((it[0], dir + [_setDirections[it[1]]]))
+                    #_Queue.push((it[0], dir + [_setDirections[it[1]]]))
+                    _Queue.push((it[0], dir + [it[1]]))
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
@@ -142,8 +144,8 @@ def uniformCostSearch(problem):
 
     _PriorityQueue.push((startingState, [], 0), 0)
     # Set of directions to convert from string to game.Direction type
-    _setDirections = {'North': Directions.NORTH, 'South': Directions.SOUTH,
-                      'East': Directions.EAST, 'West': Directions.WEST}
+    # _setDirections = {'North': Directions.NORTH, 'South': Directions.SOUTH,
+    #                   'East': Directions.EAST, 'West': Directions.WEST}
 
     while not _PriorityQueue.isEmpty():
         # Pop top item, see if not visited
@@ -157,7 +159,8 @@ def uniformCostSearch(problem):
             _Visited.append(space)
             for it in problem.getSuccessors(space):
                 if it[0] not in _Visited:
-                    _PriorityQueue.push((it[0], dir + [_setDirections[it[1]]], cost+it[2]), it[2])
+                    #_PriorityQueue.push((it[0], dir + [_setDirections[it[1]]], cost+it[2]), it[2])
+                    _PriorityQueue.push((it[0], dir + [it[1]], cost + it[2]), cost + it[2])
 
 def nullHeuristic(state, problem=None):
     """
@@ -180,8 +183,8 @@ def aStarSearch(problem, heuristic=nullHeuristic):
 
     _PriorityQueue.push((startingState, [], 0), 0)
     # Set of directions to convert from string to game.Direction type
-    _setDirections = {'North': Directions.NORTH, 'South': Directions.SOUTH,
-                      'East': Directions.EAST, 'West': Directions.WEST}
+    # _setDirections = {'North': Directions.NORTH, 'South': Directions.SOUTH,
+    #                   'East': Directions.EAST, 'West': Directions.WEST}
 
     while not _PriorityQueue.isEmpty():
         # Pop top item, see if not visited
@@ -196,7 +199,8 @@ def aStarSearch(problem, heuristic=nullHeuristic):
             for it in problem.getSuccessors(space):
                 if it[0] not in _Visited:
                     h_cost = cost + it[2] + heuristic(it[0], problem)
-                    _PriorityQueue.push((it[0], dir + [_setDirections[it[1]]], cost + it[2]), h_cost)
+                    #_PriorityQueue.push((it[0], dir + [_setDirections[it[1]]], cost + it[2]), h_cost)
+                    _PriorityQueue.push((it[0], dir + [it[1]], cost + it[2]), h_cost)
 
 
 # Abbreviations
